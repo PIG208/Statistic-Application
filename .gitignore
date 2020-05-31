@@ -3,3 +3,6 @@
 ################################################################################
 
 /bin
+/.vs/Statistic Application/v16
+/obj
+/Statistic Application.njsproj.user
