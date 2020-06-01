@@ -58,10 +58,11 @@ app.post('/save', (req, res) => {
     req.on("end", () => {
         console.log(data.toString());
         data = JSON.parse(data);
-        var sql = util.format('INSERT INTO users (device, requestAddr, requestTime) VALUES ("%s", "%s", NOW());', conn.escape(req.header("user-agent")), req.header("origin"));
+		console.log(req.header("user-agent"));
+        var sql = util.format('INSERT INTO Users (device, requestAddr, requestTime) VALUES ("%s", "%s", NOW());', conn.escape(req.header("user-agent").slice(0,254)), req.header("origin"));
         conn.query(sql);
         conn.query("SET @last_insert_id=last_insert_id()");
-        sql = util.format('INSERT INTO trials (UserID, TopTimeAvg, BotTimeAvg, TimeAvg, Accuracy) VALUES (@last_insert_id, %d, %d, %d, %d)',
+        sql = util.format('INSERT INTO Trials (UserID, TopTimeAvg, BotTimeAvg, TimeAvg, Accuracy) VALUES (@last_insert_id, %d, %d, %d, %d)',
             data["topTime"], data["botTime"], data["avgTime"], data["accuracy"]
         );
         conn.query(sql);

@@ -1,4 +1,4 @@
-use STAT;
+use stat;
 CREATE TABLE Users (
 	ID int AUTO_INCREMENT,
 	device VARCHAR(255),

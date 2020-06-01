@@ -46,8 +46,12 @@
         /*
             CSS for trials
         */
+		#progress {
+            margin: 2vh auto 2vh;
+		}
+		
         .trial-btn-container {
-            height: 44vh;
+            height: 40vh;
             margin: 2vh auto 2vh;
         }
 
@@ -78,7 +82,7 @@
                     <h2 class="card-title">
                         反应速度测试
                     </h2>
-                    <p class="card-text">本次实验将会测试您对词义的反应速度。稍后将为您展示两个一组的词汇，请以尽可能快的速度点击其中含有积极意义的词汇。</p>
+                    <p class="card-text">本次实验将会测试您对词义的反应速度。稍后将为您展示两个一组的词汇，总共50组，请以尽可能快的速度点击其中含有<span style="text-decoration:underline">积极意义</span>的词汇。</p>
                     <div id="intro-btn" class="btn btn-primary">
                         开始
                     </div>
@@ -86,6 +90,7 @@
             </div>
         </div>
         <div id="trial-page" class="container-md page">
+			<div id="progress"></div>
             <div class="trial-btn-container">
                 <button id="trial-btn1" class="btn btn-light trial-btn">积极</button>
             </div>
@@ -98,7 +103,6 @@
             <div id="result-container">
                 <ul class="list-group" id="result-list">
                     <li class="list-group-item result-row active"></li>
-                    <li class="list-group-item result-row"></li>
                     <li class="list-group-item result-row"></li>
                     <li class="list-group-item result-row"></li>
                 </ul>
@@ -163,6 +167,7 @@
                 btn.css("background-color", LIGHT);
                 posBtn.text(posWords.pop());
                 otherBtn.text(otherWords.pop());
+				$("#progress").text(testedTotal + 1 + "/" + 50);
                 setTimeout(e => {
                     posBtn.show();
                     otherBtn.show();
@@ -177,7 +182,6 @@
             var topCount = 0;
             var correctCount = 0;
             trialList.forEach((trial, index) => {
-                console.log(trial);
                 if (!trial.isCorrect || index < 10) {
                     return;
                 }
@@ -205,7 +209,7 @@
             $($("#result-list").children()[0]).text("感谢您的参与！");
             $($("#result-list").children()[1]).text("正确率" + result.accuracy * 100 + "%");
             $($("#result-list").children()[2]).text("平均用时" + result.overallAvgTime + "ms");
-            $($("#result-list").children()[3]).text("高于整体" + Math.floor(fetchRanking() * 100) + "%");
+            /*$($("#result-list").children()[3]).text("高于整体" + Math.floor(fetchRanking() * 100) + "%");*/
             postData(result);
         }
 
@@ -215,14 +219,13 @@
 
         function getWordList() {
             $.ajax({
-                url: "http://localhost:1337/words",
+                url: "http://8.210.38.118/words",
                 method: "GET",
                 dataType: "json",
                 headers: {
                     "Access-Control-Allow-Origin":"*"
                 },
                 success: function (res) {
-                    console.log(res);
                     posWords = res["positiveWords"];
                     otherWords = res["otherWords"];
                 }
@@ -239,15 +242,13 @@
             };
             $.ajax({
                 type: "POST",
-                url: "http://localhost:1337/save",
+                url: "http://8.210.38.118/save",
                 data: JSON.stringify(data),
                 dataType: "json",
                 headers: {
                     "Access-Control-Allow-Origin":"*"
                 },
                 success: function (res) {
-                    console.log("aaasd recived");
-                    console.log("success");
                 }
             });
         }
